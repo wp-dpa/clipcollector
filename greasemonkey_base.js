@@ -4,6 +4,7 @@
 // @grant    none
 // @description   Collecting clip data for PR people
 // @require       https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
+// @require       https://raw.githubusercontent.com/wp-dpa/clipcollector/master/interactions.js
 // @icon          https://monitor.buzzrank.de/media/images/oauth/logo.png
 // @include       https://*instagram.com*
 // ==/UserScript==
