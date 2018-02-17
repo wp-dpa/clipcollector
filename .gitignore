@@ -46,3 +46,6 @@ composer.lock
 
 # Mock DB
 mockdb
+
+# Compilation excluded
+compiled.js
