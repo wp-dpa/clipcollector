@@ -8,6 +8,7 @@ $('body').prepend('\
 	<label><input id="clipcollector-flag" name="clipcollector-flag" type="checkbox" />Interaktion n&ouml;tig</label>\
   <label for="clipcollector-notes">Notiz</label>\
 	<input id="clipcollector-notes" name="clipcollector-notes" type="input" placeholder="..." />\
+  <button class="clipcollector-curateButton">Speichern</button>\
 ');
 $('#clipcollector-basegui').css({
   position: "fixed",
@@ -36,9 +37,16 @@ for(var csso in targetAnchors){
   <button class="clipcollector-pickButton">HI!!!</button>\
   ');
 }
-
+// TODO When curation fields change, mark as unsaved
+$(".clipcollector-curateButton").click(function(evt) {
+  // TODO Save curation to DB
+  var curateID = $(this).attr('id').split(':')[1];
+  console.log('Save op for ' + curateID);
+  // TODO Mark as saved
+});
 $(".clipcollector-pickButton").click(function(evt) {
-  console.log('ID', $(this).closest('article').find('time').closest('[href^="/p/"]').attr('href').match(/\/p\/([^\/]+)/)[1]);
+  var pickedID = $(this).closest('article').find('time').closest('[href^="/p/"]').attr('href').match(/\/p\/([^\/]+)/)[1];
+  $('.clipcollector-curateButton').attr('id', 'curate:'+pickedID);
   var storedData = {
     rating: 3,
     tags: "#one #two #three",
@@ -47,7 +55,12 @@ $(".clipcollector-pickButton").click(function(evt) {
   }; // TODO From DB
   for (field in storedData) {
     console.log('k',field,'v',storedData[field]);
-    $('#clipcollector-'+field).val(storedData[field]);
+    if (field != "flag") {
+      $('#clipcollector-'+field).val(storedData[field]);
+    } else {
+      // Special case for checkbox
+      $('#clipcollector-'+field).attr('checked','checked');
+    }
   }
   $('#clipcollector-basegui').show();
 });
