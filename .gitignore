@@ -44,3 +44,5 @@ Thumbs.db
 # PHP/Composer
 composer.lock
 
+# Mock DB
+mockdb
