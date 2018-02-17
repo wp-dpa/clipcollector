@@ -22,20 +22,23 @@ var getPostId = function(ele) {
 };
 
 // AJAX-Post
-var postSth = function(postId, interactionType) {
+var postSth = function(postId, interactionType, interactionValue) {
     // Current timestamp
     var now = new Date();
     var ts = now.toISOString();
     console.log('posting ...');
-
+    postData = {
+        url: 'https://www.instagram.com/p/' + postId,
+        timestamp: ts,
+        interactionType: interactionType
+    }
+    if(interactionValue !== undefined) {
+      postData.value = interactionValue;
+    }
     $.ajax({
         url: 'http://localhost:3000/interactions',
         type: 'json',
-        data: {
-            url: 'https://www.instagram.com/p/' + postId,
-            timestamp: ts,
-            interactionType: interactionType
-        },
+        data: postData,
         method: 'POST',
         success: function(data){
 
@@ -43,6 +46,36 @@ var postSth = function(postId, interactionType) {
         }
     });
 
+}
+
+var getSth = function(postId, interactionType) {
+  console.log("GET", postId, interactionType);
+  $.get({
+    url: 'http://localhost:3000/interactions?url=https://www.instagram.com/p/'+postId+'&interactionType='+interactionType,
+    success: function(data) {
+      console.log(data);
+      if(data.length) {
+        if (interactionType != "flag") {
+          $('#clipcollector-'+interactionType).val(data[data.length-1].value);
+        } else {
+          // Special case for checkbox
+          $('#clipcollector-'+interactionType).prop('checked', (data[data.length-1].value === "true"));
+
+        }
+      } else {
+        if (interactionType != "flag") {
+          $('#clipcollector-'+interactionType).val("");
+        } else {
+          // Special case for checkbox
+          $('#clipcollector-'+interactionType).prop("checked", false);
+        }
+
+      }
+    },
+    error: function(err) {
+      console.log('ERROR', err);
+    }
+  });
 }
 
 // Kommentarinteraktion erkennen
@@ -102,10 +135,14 @@ window.addEventListener('scroll', function(e) {
                 });
             }
 
+            $btnLike.parent().parent().append('\
+            <button class="clipcollector-pickButton">ClipCollector</button>\
+            ');
+            registerPickButtons();
+
         });
 
 
 
 
 });
-
