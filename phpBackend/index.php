@@ -63,6 +63,13 @@ if (isset($list)) {
 
 
     foreach ($list as $row) {
+        if (property_exists($row, 'value') && $row->value == "") {
+            continue;
+        }
+
+        if (property_exists($row, 'interactionType') && $row->interactionType == 'flag' && $row->value == 'false') {
+            continue;
+        }
 
         ?>
         <div class="media" style="position: relative; border: 1px solid #eeeeee; padding: 10px 10px 10px 80px; margin-bottom: 60px; width: 75%">
@@ -71,7 +78,7 @@ if (isset($list)) {
 
 
             <?php
-            if (property_exists($row, 'interactionType') && $row->interactionType == 'flag') {
+            if (property_exists($row, 'interactionType') && $row->interactionType == 'flag' && $row->value == 'true') {
                 echo '<i class="fas fa-bell" style="position: absolute; top: 20px; right: 20px; font-size: 30px; color: red;" title="Interaktion nötig"></i>';
             }
 
@@ -109,7 +116,7 @@ if (isset($list)) {
                 <?php
                     for ($i=1; $i<=5; $i++) {
 
-                        if (property_exists($row, 'rating') && $row->rating >= $i) {
+                        if (property_exists($row, 'interactionType') && $row->interactionType == 'rating' && $row->value >= $i) {
                             $bgcolor = 'gold';
                         }
                         else {
